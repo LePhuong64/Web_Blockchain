@@ -1,0 +1,52 @@
+/* Container chính */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-color: #e2e8f0; /* Màu nền xám nhạt */
+  }
+  
+  /* Nội dung chính */
+  .content {
+    width: 80%;
+    max-width: 800px;
+    background-color: #ffffff; /* Màu nền trắng */
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Tiêu đề */
+  .title {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #2d3748; /* Màu chữ xám đậm */
+    margin-bottom: 24px;
+  }
+  
+  /* Danh sách bài kiểm tra */
+  .test-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  /* Mục trong danh sách */
+  .test-item {
+    text-align: center;
+    margin-bottom: 12px;
+  }
+  
+  /* Liên kết bài kiểm tra */
+  .test-link {
+    text-decoration: none;
+    color: #3182ce; /* Màu chữ xanh dương */
+    font-size: 1.25rem;
+    font-weight: 600;
+  }
+  
+  .test-link:hover {
+    color: #2b6cb0; /* Màu chữ xanh dương đậm khi hover */
+  }
