@@ -1,0 +1,51 @@
+/* Container chính */
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #edf2f7; /* Màu nền xám nhạt */
+}
+
+/* Nội dung chính */
+.content {
+  width: 80%;
+  max-width: 600px;
+  background-color: #ffffff; /* Màu nền trắng */
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Tên sinh viên */
+.student-name {
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2d3748; /* Màu chữ xám đậm */
+  margin-bottom: 24px;
+}
+
+/* Menu */
+.menu {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+/* Mục trong menu */
+.menu-item {
+  text-decoration: none;
+  color: #3182ce; /* Màu chữ xanh dương */
+  font-size: 1.25rem;
+  font-weight: 600;
+  padding: 12px;
+  border: 2px solid #3182ce;
+  border-radius: 8px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.menu-item:hover {
+  background-color: #3182ce; /* Màu nền xanh dương khi hover */
+  color: #ffffff; /* Màu chữ trắng khi hover */
+}

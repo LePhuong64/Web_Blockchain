@@ -1,35 +1,55 @@
 /* Container chính */
 .container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #edf2f7; /* Màu nền xám nhạt */
-  }
-  
-  /* Nội dung chính */
-  .content {
-    width: 80%;
-    max-width: 600px;
-    background-color: #ffffff; /* Màu nền trắng */
-    padding: 24px;
-    border-radius: 12px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Tiêu đề */
-  .title {
-    text-align: center;
-    font-size: 2rem;
-    font-weight: bold;
-    color: #2d3748; /* Màu chữ xám đậm */
-    margin-bottom: 24px;
-  }
-  
-  /* Điểm số */
-  .score {
-    text-align: center;
-    font-size: 1.5rem;
-    font-weight: 600;
-    color: #38a169; /* Màu chữ xanh lá */
-  }
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #edf2f7; /* Màu nền xám nhạt */
+}
+
+/* Nội dung chính */
+.content {
+  width: 80%;
+  max-width: 600px;
+  background-color: #ffffff; /* Màu nền trắng */
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Tiêu đề */
+.title {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: bold;
+  color: #2d3748; /* Màu chữ xám đậm */
+  margin-bottom: 24px;
+}
+
+/* Điểm số */
+.score {
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #38a169; /* Màu chữ xanh lá */
+  margin-bottom: 24px;
+}
+
+/* Nút quay lại trang chủ */
+.back-button {
+  display: inline-block;
+  padding: 12px 24px;
+  background-color: #3182ce; /* Màu nền xanh dương */
+  color: #ffffff; /* Màu chữ trắng */
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+  background-color: #2b6cb0; /* Màu nền xanh dương đậm khi hover */
+}
