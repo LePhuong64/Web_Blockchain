@@ -1,25 +1,56 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import "../../styles/studenthome.css"; 
+import React from 'react';
+import { Routes, Route, Link, useLocation, Navigate } from "react-router-dom";
+import TestList from './TestList';
+import TestHistory from "./TestHistory";
+import TakeTest from "./TakeTest";
+import TestResult from "./TestResult";
+import "../../styles/studenthome.css";
 
-const StudentHome = () => {
-  const studentName = "Lê Thị Phượng ";
+function StudentHome() {
+  const location = useLocation();
+  const path = location.pathname;
 
   return (
-    <div className="container">
-      <div className="content">
-        <h1 className="student-name">Xin chào, {studentName}</h1>
+    <div className="dashboard-container">
+      {/* Sidebar */}
+      <div className="sidebar">
+        <div className="header">
+          Hệ thống chấm điểm tự động bài kiểm tra
+        </div>
+        
+        <div className="user-profile">
+          <div className="user-avatar">SV</div>
+          <div className="user-name">Sinh viên</div>
+        </div>
+        
         <div className="menu">
-          <Link to="/test-list" className="menu-item">
+          <Link 
+            to="/student/test-list" 
+            className={`menu-item ${path.includes('/test-list') ? 'active' : ''}`}
+          >
             Danh sách bài kiểm tra
           </Link>
-          <Link to="/history" className="menu-item">
+          <Link 
+            to="/student/test-history" 
+            className={`menu-item ${path.includes('/test-history') ? 'active' : ''}`}
+          >
             Bài kiểm tra đã làm
           </Link>
         </div>
       </div>
+      
+      {/* Main content */}
+      <div className="content">
+        <Routes>
+          <Route path="/" element={<Navigate to="/student/test-list" />} />
+          <Route path="/student/test-list" element={<TestList />} />
+          <Route path="/student/test-history" element={<TestHistory />} />
+          <Route path="/student/take-test/:id" element={<TakeTest />} />
+          <Route path="/student/result" element={<TestResult />} />
+        </Routes>
+      </div>
     </div>
   );
-};
+}
 
 export default StudentHome;

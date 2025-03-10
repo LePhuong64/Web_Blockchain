@@ -1,64 +1,42 @@
-import React, { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
-import "../../styles/taketest.css"; // Import file CSS
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import '../../styles/taketest.css';
 
-const mockTestData = {
-  1: {
-    title: "Bài kiểm tra JavaScript",
-    questions: [
-      {
-        question: "JavaScript là ngôn ngữ gì?",
-        options: ["Frontend", "Backend", "Cả hai", "Không phải"],
-      },
-    ],
-  },
-  2: {
-    title: "Bài kiểm tra React",
-    questions: [
-      {
-        question: "React là thư viện hay framework?",
-        options: ["Thư viện", "Framework", "Cả hai", "Không phải"],
-      },
-    ],
-  },
-};
+function TakeTest() {
+  const [questions] = useState([
+    { id: 1, question: 'Câu hỏi 1: Thủ đô của Việt Nam là gì?', options: ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Huế'] },
+    { id: 2, question: 'Câu hỏi 2: 2 + 2 = ?', options: ['3', '4', '5', '6'] }
+  ]);
 
-const TakeTest = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
-  const test = mockTestData[id];
-  const [answers, setAnswers] = useState({});
-
-  if (!test) return <p>Không tìm thấy bài kiểm tra</p>;
 
   const handleSubmit = () => {
-    navigate("/result", { state: { score: Math.random() * 10 } });
+    const score = Math.random() * 10; 
+    navigate('/student/result', { state: { score } });
   };
 
   return (
-    <div className="container">
-      <div className="content">
-        <h2 className="title">{test.title}</h2>
-        {test.questions.map((q, index) => (
-          <div key={index} className="question-block">
-            <p className="question">{q.question}</p>
-            {q.options.map((option, i) => (
-              <label key={i} className="option">
-                <input
-                  type="radio"
-                  name={index}
-                  value={option}
-                  onChange={() => setAnswers({ ...answers, [index]: option })}
-                />
-                {option}
-              </label>
-            ))}
+    <div className="card">
+      <h2 className="card-title">Bài kiểm tra</h2>
+
+      {questions.map((q, index) => (
+        <div key={q.id} className="exam-card">
+          <div className="exam-info">
+            <div className="exam-title">{`${index + 1}. ${q.question}`}</div>
+            <div className="exam-meta">
+              {q.options.map((opt, index) => (
+                <div key={index} className="option">
+                  <input type="radio" name={`question-${q.id}`} /> {opt}
+                </div>
+              ))}
+            </div>
           </div>
-        ))}
-        <button className="submit-button" onClick={handleSubmit}>Nộp bài</button>
-      </div>
+        </div>
+      ))}
+
+      <button className="btn-primary submit-button" onClick={handleSubmit}>Nộp bài</button>
     </div>
   );
-};
+}
 
 export default TakeTest;
