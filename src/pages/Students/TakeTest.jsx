@@ -1,39 +1,88 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
+import getBlockchain from '../../utils/blockchain';
 import '../../styles/taketest.css';
 
 function TakeTest() {
-  const [questions] = useState([
-    { id: 1, question: 'Câu hỏi 1: Thủ đô của Việt Nam là gì?', options: ['Hà Nội', 'Hồ Chí Minh', 'Đà Nẵng', 'Huế'] },
-    { id: 2, question: 'Câu hỏi 2: 2 + 2 = ?', options: ['3', '4', '5', '6'] }
-  ]);
-
+  const { id } = useParams();
+  const [questions, setQuestions] = useState([]);
+  const [answers, setAnswers] = useState({});
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-    const score = Math.random() * 10; 
-    navigate('/student/result', { state: { score } });
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      const token = localStorage.getItem('token');
+      try {
+        const response = await axios.get(`http://localhost:5000/api/exams/${id}`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setQuestions(response.data.questions);
+      } catch (error) {
+        console.error('Error fetching questions:', error);
+      }
+    };
+
+    fetchQuestions();
+  }, [id]);
+
+  const handleOptionChange = (questionId, optionIndex) => {
+    setAnswers((prev) => ({
+      ...prev,
+      [questionId]: optionIndex
+    }));
+  };
+
+  const handleSubmit = async () => {
+    console.log('handleSubmit called');
+
+    const { web3, contract } = await getBlockchain();
+    const accounts = await web3.eth.getAccounts();
+    console.log('Connected to blockchain:', { web3, contract, accounts });
+
+    let score = 0;
+    questions.forEach((question) => {
+      if (answers[question._id] === question.correctAnswer) {
+        score += 10 / questions.length;
+      }
+    });
+
+    console.log('Calculated score:', score);
+    localStorage.setItem("score", score);
+    localStorage.setItem("examId", id);
+
+    try {
+      await contract.methods.submitResult(id, score).send({ from: accounts[0] });
+      console.log('Result submitted successfully:', { score, examId: id });
+      navigate('/Students/TestResult');
+    } catch (error) {
+      console.error('Error submitting result:', error);
+    }
   };
 
   return (
     <div className="card">
       <h2 className="card-title">Bài kiểm tra</h2>
-
       {questions.map((q, index) => (
-        <div key={q.id} className="exam-card">
+        <div key={q._id} className="exam-card">
           <div className="exam-info">
-            <div className="exam-title">{`${index + 1}. ${q.question}`}</div>
+            <div className="exam-title">{`${index + 1}. ${q.questionText}`}</div>
             <div className="exam-meta">
               {q.options.map((opt, index) => (
                 <div key={index} className="option">
-                  <input type="radio" name={`question-${q.id}`} /> {opt}
+                  <input 
+                    type="radio" 
+                    name={`question-${q._id}`} 
+                    onChange={() => handleOptionChange(q._id, index)} 
+                  /> {opt}
                 </div>
               ))}
             </div>
           </div>
         </div>
       ))}
-
       <button className="btn-primary submit-button" onClick={handleSubmit}>Nộp bài</button>
     </div>
   );

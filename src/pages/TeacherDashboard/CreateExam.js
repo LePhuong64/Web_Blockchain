@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import '../../App.css'; 
 
 function CreateExam() {
@@ -48,7 +49,7 @@ function CreateExam() {
     setQuestions(questions.filter(q => q.id !== id));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (!examName.trim()) {
@@ -60,18 +61,29 @@ function CreateExam() {
       alert('Vui lòng thêm ít nhất một câu hỏi!');
       return;
     }
-    
-    // Gửi dữ liệu bài kiểm tra lên backend
-    console.log({
-      examName,
-      duration,
-      questions,
-      createdAt: new Date().toISOString()
-    });
-    
-    alert('Tạo bài kiểm tra thành công!');
-    navigate('/teacher/manage-exams');
+
+    const token = localStorage.getItem('token');
+
+    try {
+      const response = await axios.post('http://localhost:5000/api/exams', {
+        name: examName,
+        date: new Date().toISOString(),
+        duration,
+        questions
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+
+      alert('Tạo bài kiểm tra thành công!');
+      navigate('/teacher/manage-exams');
+    } catch (error) {
+      console.error('Error creating exam:', error);
+      alert('Đã xảy ra lỗi khi tạo bài kiểm tra. Vui lòng thử lại.');
+    }
   };
+
   return (
     <div className="card">
       <h2 className="card-title">Tạo bài kiểm tra</h2>
@@ -175,10 +187,10 @@ function CreateExam() {
                   </div>
                   <div style={{ margin: '10px 0' }}>{q.questionText}</div>
                   <div>
-  {q.options.map((option, i) => (
-    <div key={i}>- {option}</div>
-  ))}
-</div>
+                    {q.options.map((option, i) => (
+                      <div key={i}>- {option}</div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
