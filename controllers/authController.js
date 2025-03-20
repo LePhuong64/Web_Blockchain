@@ -3,10 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 exports.register = async (req, res) => {
-  const { username, email, password, isTeacher } = req.body;
+  const { username, email, password, role } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = new User({ username, email, password: hashedPassword, isTeacher });
+    const user = new User({ username, email, password: hashedPassword, role });
     await user.save();
     res.status(201).json(user);
   } catch (error) {
@@ -25,8 +25,8 @@ exports.login = async (req, res) => {
     if (!isMatch) {
       return res.status(400).json({ error: 'Invalid email or password' });
     }
-    const token = jwt.sign({ id: user._id, isTeacher: user.isTeacher }, 'your_jwt_secret', { expiresIn: '1h' }); // Thay 'your_jwt_secret' bằng secret của bạn
-    res.json({ token, isTeacher: user.isTeacher });
+    const token = jwt.sign({ id: user._id, role: user.role }, 'your_jwt_secret', { expiresIn: '1h' }); // Thay 'your_jwt_secret' bằng secret của bạn
+    res.json({ token, role: user.role });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -56,7 +56,7 @@ function TakeTest() {
     try {
       await contract.methods.submitResult(id, score).send({ from: accounts[0] });
       console.log('Result submitted successfully:', { score, examId: id });
-      navigate('/Students/TestResult');
+      navigate('/student/result');
     } catch (error) {
       console.error('Error submitting result:', error);
     }

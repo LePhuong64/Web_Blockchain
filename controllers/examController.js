@@ -12,8 +12,11 @@ exports.createExam = async (req, res) => {
 };
 
 exports.getExams = async (req, res) => {
+  const { status } = req.query; // Get the status from query parameters
+  const filter = status ? { status } : {}; // If status is provided, filter by status
+
   try {
-    const exams = await Exam.find(); // Trả về tất cả các bài kiểm tra
+    const exams = await Exam.find(filter); // Fetch exams based on the filter
     res.json(exams);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -27,6 +30,84 @@ exports.getExamById = async (req, res) => {
       return res.status(404).json({ error: 'Exam not found' });
     }
     res.json(exam);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.updateExam = async (req, res) => {
+  const { examId } = req.params;
+  const { name, date, duration, questions } = req.body;
+
+  try {
+    const exam = await Exam.findById(examId);
+    if (!exam) {
+      return res.status(404).json({ error: 'Exam not found' });
+    }
+
+    exam.name = name;
+    exam.date = date;
+    exam.duration = duration;
+    exam.questions = questions;
+    await exam.save();
+
+    res.status(200).json({ message: 'Exam updated successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.deleteExam = async (req, res) => {
+  const { examId } = req.params;
+
+  try {
+    const exam = await Exam.findById(examId);
+    if (!exam) {
+      return res.status(404).json({ error: 'Exam not found' });
+    }
+
+    await exam.remove();
+    res.status(200).json({ message: 'Exam deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.approveExam = async (req, res) => {
+  const { examId } = req.params;
+  const userId = req.user._id;
+
+  try {
+    const exam = await Exam.findById(examId);
+    if (!exam) {
+      return res.status(404).json({ error: 'Exam not found' });
+    }
+
+    exam.approvedBy = userId;
+    exam.status = 'approved';
+    await exam.save();
+
+    res.status(200).json({ message: 'Exam approved successfully' });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+};
+
+exports.rejectExam = async (req, res) => {
+  const { examId } = req.params;
+  const { reason } = req.body;
+
+  try {
+    const exam = await Exam.findById(examId);
+    if (!exam) {
+      return res.status(404).json({ error: 'Exam not found' });
+    }
+
+    exam.status = 'rejected';
+    exam.rejectReason = reason;
+    await exam.save();
+
+    res.status(200).json({ message: 'Exam rejected successfully' });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

@@ -12,10 +12,13 @@ const Login = () => {
     e.preventDefault();
     try {
       const response = await axios.post('http://localhost:5000/api/login', { email, password });
-      const { token, isTeacher } = response.data;
+      const { token, role } = response.data;
       localStorage.setItem('token', token);
-      if (isTeacher) {
-        navigate('/teacher/manage-exams');
+      localStorage.setItem('role', role);
+      if (role === 'teacher') {
+        navigate('/teacher');
+      } else if (role === 'manager') {
+        navigate('/manager');
       } else {
         navigate('/student/test-list');
       }

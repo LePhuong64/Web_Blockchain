@@ -41,6 +41,10 @@ function ManageExam() {
           <div className="exam-info">
             <div className="exam-title">{exam.name}</div>
             <div className="exam-meta">Thời gian: {exam.duration} phút</div>
+            <div className="exam-status">Trạng thái: {exam.status}</div>
+            {exam.status === 'rejected' && (
+              <div className="exam-reject-reason">Lý do từ chối: {exam.rejectReason}</div>
+            )}
           </div>
         </div>
       ))}

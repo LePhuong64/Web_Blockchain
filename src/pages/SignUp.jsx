@@ -7,14 +7,14 @@ const SignUp = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isTeacher, setIsTeacher] = useState(false);
+  const [role, setRole] = useState('student'); // Thay đổi từ isTeacher thành role
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:5000/api/register', { username, email, password, isTeacher });
-      navigate('/');
+      await axios.post('http://localhost:5000/api/register', { username, email, password, role });
+      navigate('/login');
     } catch (error) {
       alert('Đăng ký không thành công');
     }
@@ -59,11 +59,30 @@ const SignUp = () => {
           <div className="nhom-truong-nhap">
             <label>
               <input
-                type="checkbox"
-                checked={isTeacher}
-                onChange={(e) => setIsTeacher(e.target.checked)}
+                type="radio"
+                value="student"
+                checked={role === 'student'}
+                onChange={(e) => setRole(e.target.value)}
               />
-              Đăng ký là giáo viên
+              Học sinh
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="teacher"
+                checked={role === 'teacher'}
+                onChange={(e) => setRole(e.target.value)}
+              />
+              Giáo viên
+            </label>
+            <label>
+              <input
+                type="radio"
+                value="manager"
+                checked={role === 'manager'}
+                onChange={(e) => setRole(e.target.value)}
+              />
+              Trưởng phòng
             </label>
           </div>
 

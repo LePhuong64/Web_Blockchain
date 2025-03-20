@@ -1,12 +1,19 @@
 import React from 'react';
-import { Routes, Route, Link, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, Link, useLocation, Navigate, useNavigate } from "react-router-dom";
 import CreateExam from './CreateExam';
 import ManageExam from "./ManageExam";
 import '../../App.css'; 
 
 function TeacherDashboard() {
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname;
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    navigate('/');
+  };
 
   return (
     <div className="dashboard-container">
@@ -40,6 +47,9 @@ function TeacherDashboard() {
           >
             Tạo bài kiểm tra
           </Link>
+          <button onClick={handleLogout} className="menu-item logout-button">
+            Đăng xuất
+          </button>
         </div>
       </div>
       

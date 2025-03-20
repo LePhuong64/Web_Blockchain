@@ -15,11 +15,12 @@ function TestList() {
         return;
       }
       try {
-        const response = await axios.get('http://localhost:5000/api/exams', {
+        const response = await axios.get('http://localhost:5000/api/exams?status=approved', {
           headers: {
             Authorization: `Bearer ${token}`
           }
         });
+        console.log('API Response:', response.data); // Log the API response
         setExams(response.data);
       } catch (error) {
         console.error('Error fetching exams:', error);
@@ -33,6 +34,17 @@ function TestList() {
     navigate(`/student/take-test/${id}`);
   };
 
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('vi-VN', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
+
   return (
     <div>
       <div className="card">
@@ -43,7 +55,11 @@ function TestList() {
             <div key={exam._id} className="exam-card">
               <div className="exam-info">
                 <div className="exam-title">{exam.name}</div>
-                <div className="exam-meta">Thời gian: {exam.duration} phút</div>
+                <div className="exam-meta">
+                  <div>Thời gian làm bài: {exam.duration} phút</div>
+                  <div>Giáo viên: {exam.teacher?.name || 'Chưa có thông tin'}</div>
+                  <div>Ngày tạo: {formatDate(exam.createdAt)}</div>
+                </div>
               </div>
               <div className="exam-actions">
                 <button className="btn-primary" onClick={() => handleTakeTest(exam._id)}>Làm bài</button>

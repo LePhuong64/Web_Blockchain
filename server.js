@@ -14,43 +14,40 @@ app.use(express.json());
 
 app.post('/api/register', authController.register);
 app.post('/api/login', authController.login);
-app.get('/api/exams/:id', examController.getExamById); // Thêm dòng này
 
+// Middleware to verify token and set req.user
 app.use(async (req, res, next) => {
   const token = req.header('Authorization');
   if (token) {
     try {
-      const decoded = jwt.verify(token.split(' ')[1], 'your_jwt_secret'); 
-      const user = await User.findById(decoded.id); // Truy vấn user từ DB
+      const decoded = jwt.verify(token.split(' ')[1], 'your_jwt_secret');
+      const user = await User.findById(decoded.id);
       if (user) {
         req.user = user;
-        next(); // Cho phép request tiếp tục
+        console.log('User authenticated:', user);
+        next();
       } else {
+        console.log('User not found');
         return res.status(401).json({ error: 'Unauthorized: User not found' });
       }
     } catch (error) {
-      console.error('Token verification failed:', error);
+      console.log('Invalid token:', error.message);
       return res.status(401).json({ error: 'Unauthorized: Invalid token' });
     }
   } else {
+    console.log('No token provided');
     return res.status(401).json({ error: 'Unauthorized: No token provided' });
   }
 });
 
+app.get('/api/exams', examController.getExams);
+app.get('/api/exams/:id', examController.getExamById);
+app.post('/api/exams', examController.createExam);
+app.put('/api/exams/:examId', examController.updateExam);
+app.delete('/api/exams/:examId', examController.deleteExam);
+app.post('/api/exams/:examId/approve', examController.approveExam);
+app.post('/api/exams/:examId/reject', examController.rejectExam);
 
-app.post('/api/exams', (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-  next();
-}, examController.createExam);
-
-app.get('/api/exams', (req, res, next) => {
-  if (!req.user) {
-    return res.status(401).json({ error: 'Unauthorized' });
-  }
-  next();
-}, examController.getExams);
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(5000, () => {
+  console.log('Server is running on port 5000');
+});

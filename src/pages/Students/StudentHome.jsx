@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, Link, useLocation, Navigate } from "react-router-dom";
+import { Routes, Route, Link, useLocation, Navigate, useNavigate } from "react-router-dom";
 import TestList from './TestList';
 import TestHistory from "./TestHistory";
 import TakeTest from "./TakeTest";
@@ -8,7 +8,14 @@ import "../../styles/studenthome.css";
 
 function StudentHome() {
   const location = useLocation();
+  const navigate = useNavigate();
   const path = location.pathname;
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('role');
+    navigate('/');
+  };
 
   return (
     <div className="dashboard-container">
@@ -36,6 +43,9 @@ function StudentHome() {
           >
             Bài kiểm tra đã làm
           </Link>
+          <button onClick={handleLogout} className="menu-item logout-button">
+            Đăng xuất
+          </button>
         </div>
       </div>
       

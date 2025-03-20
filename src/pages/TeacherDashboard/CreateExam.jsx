@@ -65,12 +65,14 @@ function CreateExam() {
     const token = localStorage.getItem('token');
 
     try {
-      const response = await axios.post('http://localhost:5000/api/exams', {
+      const examData = {
         name: examName,
         date: new Date().toISOString(),
         duration,
         questions
-      }, {
+      };
+
+      const response = await axios.post('http://localhost:5000/api/exams', examData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -130,18 +132,20 @@ function CreateExam() {
               />
             </div>
             
-            {options.map((option, index) => (
-              <div className="option-group" key={index}>
-                <label className="form-label">Đáp án {index + 1}</label>
-                <input
-                  type="text"
-                  className="form-input"
-                  value={option}
-                  onChange={(e) => handleOptionChange(index, e.target.value)}
-                  placeholder={`Nhập đáp án ${index + 1}`}
-                />
-              </div>
-            ))}
+            <div className="options-container">
+              {options.map((option, index) => (
+                <div className="option-group" key={index}>
+                  <label className="form-label">Đáp án {index + 1}</label>
+                  <input
+                    type="text"
+                    className="form-input"
+                    value={option}
+                    onChange={(e) => handleOptionChange(index, e.target.value)}
+                    placeholder={`Nhập đáp án ${index + 1}`}
+                  />
+                </div>
+              ))}
+            </div>
             
             <div className="form-control">
               <label className="form-label">Đáp án đúng</label>
